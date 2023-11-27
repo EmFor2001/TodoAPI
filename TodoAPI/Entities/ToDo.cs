@@ -8,7 +8,7 @@ namespace TodoAPI.Entities
         [Required]
         public Guid Guid { get; set; }
 
-        public string tittle { get; set; }
+        public string title { get; set; }
         public string description { get; set; }
     }
 }

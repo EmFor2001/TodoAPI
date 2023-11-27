@@ -27,7 +27,7 @@ namespace TodoAPI.Controllers
             try
             {
                 ToDo todo = new ToDo();
-                todo.tittle = dto.tittle;
+                todo.title = dto.title;
                 todo.description = dto.description;
                 db.Todos.Add(todo);
                 await db.SaveChangesAsync();
@@ -46,6 +46,46 @@ namespace TodoAPI.Controllers
         {
             return Ok(db.Set<ToDo>().ToList());
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> ToDoGetById(Guid id)
+        {
+            return Ok(db.Set<ToDo>().Find(id));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ToDoUpdate(Guid id, [FromBody] ToDoUpdateDto dto)
+        {
+            try
+            {
+                ToDo todo = db.Set<ToDo>().Find(id);
+                todo.title = dto.title;
+                todo.description = dto.description;
+                db.Entry(todo).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400);
+            }
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> TodoDelete(Guid id)
+        {
+            try
+            {
+                ToDo todo = db.Set<ToDo>().Find(id);
+                db.Todos.Remove(todo);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400);
+            }
+            return Ok();
+        }   
     }
 }
 
